@@ -31,6 +31,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -113,6 +115,11 @@ fun TelaPrincipalContent(
     val uriHandler = LocalUriHandler.current
     val scrollState = rememberScrollState()
 
+    val focusRequesterEstacaInicial = remember { FocusRequester() }
+    val focusRequesterMetrosInicial = remember { FocusRequester() }
+    val focusRequesterEstacaFinal = remember { FocusRequester() }
+    val focusRequesterMetrosFinal = remember { FocusRequester() }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -156,7 +163,12 @@ fun TelaPrincipalContent(
                     valorEstacas = state.estacaInicial,
                     onEstacasChange = onEstacaInicialChanged,
                     valorMetros = state.metrosEstacaInicial,
-                    onMetrosChange = onMetrosEstacaInicialChanged
+                    onMetrosChange = onMetrosEstacaInicialChanged,
+                    focusRequesterEstacas = focusRequesterEstacaInicial,
+                    focusRequesterMetros = focusRequesterMetrosInicial,
+                    imeActionMetros = ImeAction.Next,
+                    onAvancarEstacas = { focusRequesterMetrosInicial.requestFocus() },
+                    onAvancarMetros = { focusRequesterEstacaFinal.requestFocus() }
                 )
 
                 // Card 2: Estaca Final (Destaque Azul harmônico com a Estaca Inicial)
@@ -168,7 +180,12 @@ fun TelaPrincipalContent(
                     valorEstacas = state.estacaFinal,
                     onEstacasChange = onEstacaFinalChanged,
                     valorMetros = state.metrosEstacaFinal,
-                    onMetrosChange = onMetrosEstacaFinalChanged
+                    onMetrosChange = onMetrosEstacaFinalChanged,
+                    focusRequesterEstacas = focusRequesterEstacaFinal,
+                    focusRequesterMetros = focusRequesterMetrosFinal,
+                    imeActionMetros = ImeAction.Done,
+                    onAvancarEstacas = { focusRequesterMetrosFinal.requestFocus() },
+                    onAvancarMetros = { focusManager.clearFocus() }
                 )
 
                 // Card 3: Resultado destacado com fundo verde menta

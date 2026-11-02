@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.outlined.Straighten
@@ -42,7 +47,12 @@ fun SecaoEntradaEstaca(
     onEstacasChange: (String) -> Unit,
     valorMetros: String,
     onMetrosChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    focusRequesterEstacas: FocusRequester = remember { FocusRequester() },
+    focusRequesterMetros: FocusRequester = remember { FocusRequester() },
+    imeActionMetros: ImeAction = ImeAction.Next,
+    onAvancarEstacas: () -> Unit = {},
+    onAvancarMetros: () -> Unit = {}
 ) {
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
@@ -123,11 +133,20 @@ fun SecaoEntradaEstaca(
                     OutlinedTextField(
                         value = valorEstacas,
                         onValueChange = onEstacasChange,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequesterEstacas),
                         placeholder = { Text(text = "0", color = Color(0xFF94A3B8)) },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { onAvancarEstacas() },
+                            onDone = { onAvancarEstacas() }
+                        ),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedContainerColor = Color(0xFFFAFCFF),
                             unfocusedContainerColor = Color(0xFFFAFCFF),
@@ -163,11 +182,20 @@ fun SecaoEntradaEstaca(
                     OutlinedTextField(
                         value = valorMetros,
                         onValueChange = onMetrosChange,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequesterMetros),
                         placeholder = { Text(text = "0,00", color = Color(0xFF94A3B8)) },
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Decimal,
+                            imeAction = imeActionMetros
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { onAvancarMetros() },
+                            onDone = { onAvancarMetros() }
+                        ),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedContainerColor = Color(0xFFFAFCFF),
                             unfocusedContainerColor = Color(0xFFFAFCFF),
