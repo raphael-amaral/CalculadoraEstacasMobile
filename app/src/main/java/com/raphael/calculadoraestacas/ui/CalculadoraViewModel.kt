@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 
 class CalculadoraViewModel(
     application: Application,
-    private val dataStore: ConfiguracoesDataStore = ConfiguracoesDataStore(application)
+    private val dataStore: ConfiguracoesDataStore
 ) : AndroidViewModel(application) {
+
+    constructor(application: Application) : this(application, ConfiguracoesDataStore(application))
 
     private val _uiState = MutableStateFlow(CalculadoraUiState())
     val uiState: StateFlow<CalculadoraUiState> = _uiState.asStateFlow()

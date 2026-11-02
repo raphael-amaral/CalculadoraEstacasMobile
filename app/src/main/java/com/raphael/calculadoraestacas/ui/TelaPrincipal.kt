@@ -1,14 +1,26 @@
 package com.raphael.calculadoraestacas.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -18,15 +30,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.raphael.calculadoraestacas.ui.components.HeaderApp
 import com.raphael.calculadoraestacas.ui.components.PainelConfiguracoes
+import com.raphael.calculadoraestacas.ui.components.RodapeOnda
 import com.raphael.calculadoraestacas.ui.components.SecaoEntradaEstaca
 import com.raphael.calculadoraestacas.ui.components.SecaoResultado
 import com.raphael.calculadoraestacas.ui.theme.CalculadoraEstacasTheme
@@ -91,64 +110,111 @@ fun TelaPrincipalContent(
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
+    val uriHandler = LocalUriHandler.current
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(Color(0xFFF3F6FA))
             .pointerInput(focusManager) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
+        // Onda decorativa fixa na base da tela (preenchendo até a borda inferior)
+        RodapeOnda(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(48.dp)
+                .verticalScroll(scrollState)
+                .navigationBarsPadding()
+                .padding(bottom = 56.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Cabeçalho curvo com degradê azul
+            HeaderApp(
+                onAbrirConfiguracoes = onAbrirConfiguracoes
+            )
+
+            // Conteúdo principal com os cards estilizados
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    FilledIconButton(
-                        onClick = onAbrirConfiguracoes,
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    ) {
-                        Text(text = "⚙")
-                    }
-                }
-                Text(
-                    text = "Calculadora de estacas",
-                    style = MaterialTheme.typography.titleLarge
+                // Card 1: Estaca Inicial (Destaque Azul)
+                SecaoEntradaEstaca(
+                    numeroEtapa = "1",
+                    corBadge = Color(0xFF004799),
+                    corFundoCabecalho = Color(0xFFE9F2FB),
+                    titulo = "Estaca Inicial",
+                    valorEstacas = state.estacaInicial,
+                    onEstacasChange = onEstacaInicialChanged,
+                    valorMetros = state.metrosEstacaInicial,
+                    onMetrosChange = onMetrosEstacaInicialChanged
                 )
+
+                // Card 2: Estaca Final (Destaque Verde)
+                SecaoEntradaEstaca(
+                    numeroEtapa = "2",
+                    corBadge = Color(0xFF16A34A),
+                    corFundoCabecalho = Color(0xFFE7F6EC),
+                    titulo = "Estaca final",
+                    valorEstacas = state.estacaFinal,
+                    onEstacasChange = onEstacaFinalChanged,
+                    valorMetros = state.metrosEstacaFinal,
+                    onMetrosChange = onMetrosEstacaFinalChanged
+                )
+
+                // Card 3: Resultado destacado com fundo verde menta
+                SecaoResultado(
+                    textoResultado = state.textoResultado,
+                    metrosPorEstaca = state.configuracoesSalvas.metrosPorEstaca,
+                    onLimpar = onLimparCampos,
+                    onCopiar = onCopiarResultado
+                )
+
+                // Assinatura clicável direcionando para o perfil do GitHub
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .clickable {
+                            uriHandler.openUri("https://github.com/raphael-amaral")
+                        }
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Desenvolvido por ",
+                        fontSize = 13.sp,
+                        color = Color(0xFF64748B)
+                    )
+                    Text(
+                        text = "Raphael do Amaral Nunes",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF0055AC)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                        contentDescription = "Abrir GitHub",
+                        tint = Color(0xFF0055AC),
+                        modifier = Modifier.size(14.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
             }
-
-            SecaoEntradaEstaca(
-                titulo = "Estaca Inicial",
-                valorEstacas = state.estacaInicial,
-                onEstacasChange = onEstacaInicialChanged,
-                valorMetros = state.metrosEstacaInicial,
-                onMetrosChange = onMetrosEstacaInicialChanged
-            )
-
-            SecaoEntradaEstaca(
-                titulo = "Estaca final",
-                valorEstacas = state.estacaFinal,
-                onEstacasChange = onEstacaFinalChanged,
-                valorMetros = state.metrosEstacaFinal,
-                onMetrosChange = onMetrosEstacaFinalChanged
-            )
-
-            SecaoResultado(
-                textoResultado = state.textoResultado,
-                metrosPorEstaca = state.configuracoesSalvas.metrosPorEstaca,
-                onLimpar = onLimparCampos,
-                onCopiar = onCopiarResultado
-            )
         }
 
+        // Painel deslizante de Configurações
         PainelConfiguracoes(
             visivel = state.configuracoesAbertas,
             metrosPorEstaca = state.configuracoesTempMetrosPorEstaca,
@@ -165,6 +231,7 @@ fun TelaPrincipalContent(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
                 .padding(16.dp)
         )
     }
@@ -175,7 +242,13 @@ fun TelaPrincipalContent(
 fun TelaPrincipalPreview() {
     CalculadoraEstacasTheme {
         TelaPrincipalContent(
-            state = CalculadoraUiState(textoResultado = "40,00 m"),
+            state = CalculadoraUiState(
+                estacaInicial = "3",
+                metrosEstacaInicial = "2.55",
+                estacaFinal = "6",
+                metrosEstacaFinal = "3.15",
+                textoResultado = "60,60 m"
+            ),
             snackbarHostState = remember { SnackbarHostState() },
             onEstacaInicialChanged = {},
             onMetrosEstacaInicialChanged = {},
