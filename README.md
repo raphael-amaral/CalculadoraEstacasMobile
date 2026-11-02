@@ -1,61 +1,95 @@
-# Calculadora de Estacas
+# Calculadora de Estacas 📐
 
-Aplicativo Android desenvolvido em Kotlin com Jetpack Compose para cálculo de distâncias entre estacas (20 m/estaca).
+Aplicativo Android moderno, ágil e intuitivo para cálculo de distâncias entre estacas topográficas em obras de infraestrutura, rodovias, ferrovias e terraplenagem.
 
----
-
-## Como gerar um arquivo `.apk` para instalar no celular
-
-No Android, todo arquivo `.apk` precisa ser **assinado digitalmente** para que o sistema operacional permita a instalação. Existem duas formas de gerar uma versão instalável:
-
-1. **APK de Debug (Mais rápido, ideal para uso pessoal e testes):** O próprio Android Studio / Gradle assina o aplicativo automaticamente com uma chave de desenvolvimento padrão.
-2. **APK de Release Assinado (Ideal para distribuição final):** Uma versão otimizada e assinada com uma chave privada (Keystore) criada por você.
+<p align="center">
+  <img src="docs/tela-atual.png" width="340" alt="Interface da Calculadora de Estacas" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+</p>
 
 ---
 
-### Opção 1: Gerar APK de Debug (Mais simples)
+## 🏗️ O Problema e a Solução
 
-#### Pelo Android Studio:
-1. No menu superior, clique em **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
-2. Aguarde a conclusão do processo no canto inferior direito.
-3. Quando aparecer a notificação *"Build APK(s): APK(s) generated successfully"*, clique no link **locate**.
-4. O arquivo estará na pasta:
+Na engenharia civil e na agrimensura, os alinhamentos de vias e obras lineares são estaqueados com piquetes a cada **20 metros** (ou outro intervalo pré-determinado). 
+
+Na rotina do canteiro de obras, encarregados, topógrafos e engenheiros frequentemente precisam calcular distâncias fracionadas entre estacas (exemplo: da **Estaca 14 + 12,50 m** até a **Estaca 48 + 5,20 m**). Fazer esses cálculos de cabeça ou em calculadoras comuns é passível de equívocos operacionais.
+
+A **Calculadora de Estacas** resolve isso de forma instantânea e à prova de falhas:
+- Permite informar o número da estaca e a fração em metros com validação em tempo real.
+- Calcula a distância exata respeitando a geometria e o sentido do alinhamento.
+- Oferece interface limpa, botões de ação rápida e funciona **100% offline**, ideal para áreas remotas e canteiros de obra.
+
+---
+
+## 🧮 Lógica de Cálculo
+
+A distância entre duas estacas no estaqueamento linear é obtida pela fórmula:
+
+$$\text{Distância (m)} = (\text{Estaca Final} - \text{Estaca Inicial}) \times \text{Metros por Estaca} + \text{Metros Final} - \text{Metros Inicial}$$
+
+> **Exemplo prático:**  
+> Da **Estaca 10 + 5,00 m** até a **Estaca 15 + 12,00 m** (com 20 m/estaca):  
+> $\text{Distância} = (15 - 10) \times 20 + 12,00 - 5,00 = 100 + 7,00 = \mathbf{107,00\text{ m}}$.
+
+---
+
+## ✨ Principais Funcionalidades
+
+- **Cálculo em Tempo Real:** Atualização imediata do resultado à medida que os campos são preenchidos.
+- **Configuração de Espaçamento:** Ajuste do valor de metros por estaca (padrão de 20 metros, customizável no menu lateral).
+- **Controle de Sentido:** Opção configurável para permitir ou restringir resultados negativos (quando a estaca inicial é maior que a final).
+- **Ações Rápidas com 1 Toque:**
+  - 📋 **Copiar:** Copia o resultado formatado com unidade métrica para a área de transferência.
+  - 🧹 **Limpar:** Reseta todos os campos de entrada de forma imediata.
+- **Design Moderno com Material 3:** Cards visualmente destacados e numerados por etapas, cores temáticas intuitivas e cabeçalho curvo com degradê.
+- **Suporte Edge-to-Edge:** Integração fluida com as bordas da tela, câmeras frontais e barras de gestos do Android.
+- **Persistência Local Leve:** Configurações salvas automaticamente no aparelho via Jetpack DataStore (sem necessidade de banco de dados pesado).
+- **Totalmente Offline & Seguro:** Sem dependência de conexão com internet, sem anúncios e sem coleta de dados do usuário.
+
+---
+
+## 🛠️ Tecnologias e Arquitetura
+
+O projeto foi construído seguindo as melhores práticas e padrões recomendados pelo Google para desenvolvimento Android moderno:
+
+- **Linguagem:** [Kotlin](https://kotlinlang.org/)
+- **Interface Declarativa:** [Jetpack Compose](https://developer.android.com/jetpack/compose) com [Material Design 3](https://m3.material.io/)
+- **Arquitetura:** MVVM (Model-View-ViewModel) + Princípios de Clean Architecture:
+  - **Domínio Puro (`domain`):** Regras matemáticas desacopladas de qualquer dependência do framework Android.
+  - **Camada de Apresentação (`ui`):** Componentes Compose modulares orientados a estados unidirecionais (*UDF*).
+- **Gerenciamento de Estado:** `StateFlow` e Kotlin Coroutines.
+- **Persistência de Dados:** [Jetpack DataStore Preferences](https://developer.android.com/topic/libraries/architecture/datastore).
+- **Testes Automatizados:** Testes unitários com JUnit 4 cobrindo casos nominais e situações de borda da lógica de cálculo.
+
+---
+
+## 📲 Como Instalar no Celular
+
+### Opção 1: Download Direto (Recomendado)
+1. Acesse a aba de [**Releases**](https://github.com/raphael-amaral/CalculadoraEstacasMobile/releases) no GitHub.
+2. Baixe o arquivo `.apk` da versão mais recente no seu celular.
+3. Abra o arquivo baixado e confirme a instalação (caso o Android solicite permissão para instalar fontes desconhecidas, autorize).
+
+### Opção 2: Compilar a partir do Código-Fonte
+Caso queira clonar e compilar o projeto na sua máquina:
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/raphael-amaral/CalculadoraEstacasMobile.git
+   cd CalculadoraEstacasMobile
+   ```
+2. Gere o APK de depuração via Gradle:
+   ```powershell
+   .\gradlew.bat assembleDebug
+   ```
+3. O APK gerado estará em:
    `app/build/outputs/apk/debug/app-debug.apk`
 
-#### Pelo Terminal (Windows PowerShell / CMD):
-Na raiz do projeto, execute:
-```powershell
-.\gradlew.bat assembleDebug
-```
-O arquivo será gerado em:
-`app\build\outputs\apk\debug\app-debug.apk`
-
 ---
 
-### Opção 2: Gerar APK de Release Assinado (Versão final de distribuição)
+## 👤 Autor
 
-Se quiser gerar uma versão final (`release`) sem os recursos de depuração:
+Desenvolvido por **Raphael do Amaral Nunes**.
 
-1. No Android Studio, vá em **Build** > **Generate Signed App Bundle / APK...**.
-2. Selecione a opção **APK** e clique em **Next**.
-3. Em **Key store path**:
-   - Se ainda não tiver uma chave, clique em **Create new...**, escolha onde salvar o arquivo `.jks`, defina uma senha para o Keystore, um apelido (*alias*) e senha para a chave, preencha ao menos um campo do certificado (ex: seu nome) e clique em **OK**.
-   - Se já tiver uma chave criada, clique em **Choose existing...** e selecione-a.
-4. Clique em **Next**.
-5. Em **Build Variants**, selecione **release** e clique em **Create**.
-6. Ao finalizar, o APK assinado estará disponível em:
-   `app/release/app-release.apk` (ou `app/build/outputs/apk/release/app-release.apk`).
-
----
-
-## Como instalar o `.apk` no celular
-
-1. **Transfira o arquivo `.apk` para o celular:**
-   - Você pode enviar pelo WhatsApp, Telegram, Google Drive, e-mail ou transferir via cabo USB.
-2. **Abra o arquivo no celular:**
-   - Use o gerenciador de arquivos do aparelho ou toque no arquivo recebido no aplicativo onde o baixou.
-3. **Permita a instalação de fontes desconhecidas (se solicitado):**
-   - Como o aplicativo não veio da Google Play Store, o Android pedirá permissão para *"Instalar apps desconhecidos"* para o aplicativo que você usou para abrir o APK (ex: Arquivos, Chrome, WhatsApp). Ative a permissão e confirme.
-4. **Aviso do Google Play Protect:**
-   - Caso apareça um aviso dizendo que o app não é reconhecido pelo Play Protect (comum em apps de estudo ou assinados com chave própria/debug), toque em **Mais detalhes** e depois em **Instalar assim mesmo**.
-5. Conclua a instalação e abra o aplicativo normalmente!
+- GitHub: [@raphael-amaral](https://github.com/raphael-amaral)
+- Repositório do Projeto: [CalculadoraEstacasMobile](https://github.com/raphael-amaral/CalculadoraEstacasMobile)
