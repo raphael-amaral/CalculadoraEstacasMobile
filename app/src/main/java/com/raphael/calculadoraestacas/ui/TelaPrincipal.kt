@@ -159,12 +159,12 @@ fun TelaPrincipalContent(
                     onMetrosChange = onMetrosEstacaInicialChanged
                 )
 
-                // Card 2: Estaca Final (Destaque Verde)
+                // Card 2: Estaca Final (Destaque Azul harmônico com a Estaca Inicial)
                 SecaoEntradaEstaca(
                     numeroEtapa = "2",
-                    corBadge = Color(0xFF16A34A),
-                    corFundoCabecalho = Color(0xFFE7F6EC),
-                    titulo = "Estaca final",
+                    corBadge = Color(0xFF004799),
+                    corFundoCabecalho = Color(0xFFE9F2FB),
+                    titulo = "Estaca Final",
                     valorEstacas = state.estacaFinal,
                     onEstacasChange = onEstacaFinalChanged,
                     valorMetros = state.metrosEstacaFinal,
