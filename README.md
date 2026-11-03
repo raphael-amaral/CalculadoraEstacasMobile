@@ -37,3 +37,7 @@ O arquivo estará disponível em `app/build/outputs/apk/debug/app-debug.apk`.
 ## 👤 Autor
 
 Desenvolvido por [Raphael do Amaral Nunes](https://github.com/raphael-amaral).
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
