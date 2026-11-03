@@ -48,6 +48,7 @@ fun SecaoEntradaEstaca(
     valorMetros: String,
     onMetrosChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    paddingVerticalCorpo: androidx.compose.ui.unit.Dp = 12.dp,
     focusRequesterEstacas: FocusRequester = remember { FocusRequester() },
     focusRequesterMetros: FocusRequester = remember { FocusRequester() },
     imeActionMetros: ImeAction = ImeAction.Next,
@@ -56,7 +57,7 @@ fun SecaoEntradaEstaca(
 ) {
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = Color.White
         ),
@@ -72,12 +73,12 @@ fun SecaoEntradaEstaca(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(corFundoCabecalho)
-                    .padding(horizontal = 18.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 9.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(28.dp)
                         .clip(CircleShape)
                         .background(corBadge),
                     contentAlignment = Alignment.Center
@@ -86,7 +87,7 @@ fun SecaoEntradaEstaca(
                         text = numeroEtapa,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontSize = 13.sp
                     )
                 }
 
@@ -95,7 +96,7 @@ fun SecaoEntradaEstaca(
                 Text(
                     text = titulo,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = Color(0xFF0F2B48)
                 )
             }
@@ -104,8 +105,8 @@ fun SecaoEntradaEstaca(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = 16.dp, vertical = paddingVerticalCorpo),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Campo Estacas
                 Column(
@@ -113,19 +114,19 @@ fun SecaoEntradaEstaca(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 6.dp)
+                        modifier = Modifier.padding(bottom = 3.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Layers,
                             contentDescription = null,
                             tint = Color(0xFF004F9E),
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "Estacas",
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = Color(0xFF334155)
                         )
                     }
@@ -138,7 +139,7 @@ fun SecaoEntradaEstaca(
                             .focusRequester(focusRequesterEstacas),
                         placeholder = { Text(text = "0", color = Color(0xFF94A3B8)) },
                         singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(10.dp),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Next
@@ -162,19 +163,19 @@ fun SecaoEntradaEstaca(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 6.dp)
+                        modifier = Modifier.padding(bottom = 3.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Straighten,
                             contentDescription = null,
                             tint = Color(0xFF004F9E),
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "Metros",
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = Color(0xFF334155)
                         )
                     }
@@ -187,7 +188,7 @@ fun SecaoEntradaEstaca(
                             .focusRequester(focusRequesterMetros),
                         placeholder = { Text(text = "0,00", color = Color(0xFF94A3B8)) },
                         singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(10.dp),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Decimal,
                             imeAction = imeActionMetros

@@ -3,6 +3,7 @@ package com.raphael.calculadoraestacas.ui.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,10 +56,11 @@ val HeaderWaveShape = GenericShape { size, _ ->
 @Composable
 fun HeaderApp(
     onAbrirConfiguracoes: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    alturaBase: androidx.compose.ui.unit.Dp = 125.dp
 ) {
     val topSafeInset = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
-    val headerHeight = 175.dp + topSafeInset
+    val headerHeight = alturaBase + topSafeInset + 8.dp
 
     Box(
         modifier = modifier
@@ -113,23 +115,23 @@ fun HeaderApp(
                 drawPath(ondaSuave2, color = Color.White.copy(alpha = 0.05f))
             }
 
-            // Conteúdo principal do cabeçalho (Ícone + Título alinhados e legíveis)
+            // Conteúdo principal do cabeçalho (Ícone + Título + Botão Configurações no topo)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 22.dp, top = topSafeInset + 22.dp, end = 22.dp),
+                    .padding(start = 20.dp, top = topSafeInset + 16.dp, end = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Ícone estilizado com fundo translúcido (efeito glass)
                 Box(
                     modifier = Modifier
-                        .size(54.dp)
-                        .clip(RoundedCornerShape(14.dp))
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(12.dp))
                         .background(Color.White.copy(alpha = 0.15f))
                         .border(
                             1.5.dp,
                             Color.White.copy(alpha = 0.35f),
-                            RoundedCornerShape(14.dp)
+                            RoundedCornerShape(12.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -137,48 +139,38 @@ fun HeaderApp(
                         imageVector = Icons.Outlined.Straighten,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(14.dp))
 
                 Text(
                     text = "Calculadora de\nestacas",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    lineHeight = 28.sp
+                    fontSize = 19.sp,
+                    lineHeight = 22.sp,
+                    modifier = Modifier.weight(1f)
                 )
-            }
-        }
 
-        // Botão flutuante de configurações encaixado suavemente na curva direita
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 24.dp)
-                .offset(y = (-6).dp)
-                .size(58.dp)
-                .shadow(6.dp, CircleShape)
-                .clip(CircleShape)
-                .background(Color(0xFFF3F6FA)),
-            contentAlignment = Alignment.Center
-        ) {
-            FilledIconButton(
-                onClick = onAbrirConfiguracoes,
-                modifier = Modifier.size(48.dp),
-                shape = CircleShape,
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = Color(0xFF004799),
-                    contentColor = Color.White
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Configurações",
-                    modifier = Modifier.size(26.dp)
-                )
+                // Botão de configurações integrado no topo direito com efeito glass
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.18f))
+                        .border(1.dp, Color.White.copy(alpha = 0.35f), CircleShape)
+                        .clickable { onAbrirConfiguracoes() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Configurações",
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
             }
         }
     }

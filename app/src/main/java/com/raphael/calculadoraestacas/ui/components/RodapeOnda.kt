@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RodapeOnda(modifier: Modifier = Modifier) {
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val totalHeight = 46.dp + navBarHeight
+    val totalHeight = 30.dp + navBarHeight
 
     Canvas(
         modifier = modifier

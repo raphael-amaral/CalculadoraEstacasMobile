@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +27,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.IconButton
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
@@ -99,21 +104,48 @@ fun BoxScope.PainelConfiguracoes(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
+                val topSafeInset = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(24.dp),
+                        .padding(
+                            start = 20.dp,
+                            top = topSafeInset + 16.dp,
+                            end = 20.dp,
+                            bottom = 20.dp
+                        ),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-                        Text(
-                            text = "Configurações",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF0F2B48)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Configurações",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF0F2B48)
+                            )
+                            IconButton(
+                                onClick = onFechar,
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF1F5F9))
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Voltar / Fechar",
+                                    tint = Color(0xFF0F2B48),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
                         OutlinedTextField(
                             value = metrosPorEstaca,
                             onValueChange = onMetrosPorEstacaChange,

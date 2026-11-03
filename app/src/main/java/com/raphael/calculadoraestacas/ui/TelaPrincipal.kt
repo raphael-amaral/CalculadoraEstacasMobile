@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +41,11 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,7 +126,7 @@ fun TelaPrincipalContent(
     val focusRequesterEstacaFinal = remember { FocusRequester() }
     val focusRequesterMetrosFinal = remember { FocusRequester() }
 
-    Box(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF3F6FA))
@@ -128,6 +134,13 @@ fun TelaPrincipalContent(
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
+        val isTallScreen = maxHeight >= 780.dp
+        val alturaBaseHeader = if (isTallScreen) 130.dp else 114.dp
+        val espacamentoCards = if (isTallScreen) 14.dp else 10.dp
+        val paddingVerticalCorpo = if (isTallScreen) 13.dp else 10.dp
+        val tamanhoFonteResultado = if (isTallScreen) 30.sp else 26.sp
+        val paddingVerticalResultado = if (isTallScreen) 9.dp else 6.dp
+
         // Onda decorativa fixa na base da tela (preenchendo até a borda inferior)
         RodapeOnda(
             modifier = Modifier.align(Alignment.BottomCenter)
@@ -138,21 +151,22 @@ fun TelaPrincipalContent(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .navigationBarsPadding()
-                .padding(bottom = 56.dp),
+                .padding(bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Cabeçalho curvo com degradê azul
             HeaderApp(
-                onAbrirConfiguracoes = onAbrirConfiguracoes
+                onAbrirConfiguracoes = onAbrirConfiguracoes,
+                alturaBase = alturaBaseHeader
             )
 
-            // Conteúdo principal com os cards estilizados
+            // Conteúdo principal com os cards estilizados e a assinatura integrada
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .padding(horizontal = 16.dp, vertical = if (isTallScreen) 8.dp else 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(espacamentoCards)
             ) {
                 // Card 1: Estaca Inicial (Destaque Azul)
                 SecaoEntradaEstaca(
@@ -164,6 +178,7 @@ fun TelaPrincipalContent(
                     onEstacasChange = onEstacaInicialChanged,
                     valorMetros = state.metrosEstacaInicial,
                     onMetrosChange = onMetrosEstacaInicialChanged,
+                    paddingVerticalCorpo = paddingVerticalCorpo,
                     focusRequesterEstacas = focusRequesterEstacaInicial,
                     focusRequesterMetros = focusRequesterMetrosInicial,
                     imeActionMetros = ImeAction.Next,
@@ -181,6 +196,7 @@ fun TelaPrincipalContent(
                     onEstacasChange = onEstacaFinalChanged,
                     valorMetros = state.metrosEstacaFinal,
                     onMetrosChange = onMetrosEstacaFinalChanged,
+                    paddingVerticalCorpo = paddingVerticalCorpo,
                     focusRequesterEstacas = focusRequesterEstacaFinal,
                     focusRequesterMetros = focusRequesterMetrosFinal,
                     imeActionMetros = ImeAction.Done,
@@ -192,42 +208,47 @@ fun TelaPrincipalContent(
                 SecaoResultado(
                     textoResultado = state.textoResultado,
                     metrosPorEstaca = state.configuracoesSalvas.metrosPorEstaca,
+                    tamanhoFonte = tamanhoFonteResultado,
+                    paddingVerticalCorpo = paddingVerticalResultado,
                     onLimpar = onLimparCampos,
                     onCopiar = onCopiarResultado
                 )
 
+                Spacer(modifier = Modifier.height(if (isTallScreen) 6.dp else 2.dp))
+
                 // Assinatura clicável direcionando para o perfil do GitHub
-                Row(
+                Column(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(12.dp))
                         .clickable {
                             uriHandler.openUri("https://github.com/raphael-amaral")
                         }
-                        .padding(horizontal = 14.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                        .padding(horizontal = 12.dp, vertical = 2.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Desenvolvido por ",
-                        fontSize = 13.sp,
+                        text = "Desenvolvido por",
+                        fontSize = 11.sp,
                         color = Color(0xFF64748B)
                     )
-                    Text(
-                        text = "Raphael do Amaral Nunes",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF0055AC)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                        contentDescription = "Abrir GitHub",
-                        tint = Color(0xFF0055AC),
-                        modifier = Modifier.size(14.dp)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Raphael do Amaral Nunes",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF0055AC)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                            contentDescription = "Abrir perfil de Raphael no GitHub",
+                            tint = Color(0xFF0055AC),
+                            modifier = Modifier.size(13.dp)
+                        )
+                    }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
 

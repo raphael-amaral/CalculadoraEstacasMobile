@@ -38,11 +38,13 @@ fun SecaoResultado(
     metrosPorEstaca: Double,
     onLimpar: () -> Unit,
     onCopiar: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tamanhoFonte: androidx.compose.ui.unit.TextUnit = 28.sp,
+    paddingVerticalCorpo: androidx.compose.ui.unit.Dp = 8.dp
 ) {
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = Color.White
         ),
@@ -53,7 +55,7 @@ fun SecaoResultado(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             // Cabeçalho do Card: Badge de Check + Título Resultado
             Row(
@@ -61,7 +63,7 @@ fun SecaoResultado(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(28.dp)
                         .clip(CircleShape)
                         .background(Color(0xFF16A34A)),
                     contentAlignment = Alignment.Center
@@ -70,7 +72,7 @@ fun SecaoResultado(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(19.dp)
+                        modifier = Modifier.size(17.dp)
                     )
                 }
 
@@ -79,41 +81,41 @@ fun SecaoResultado(
                 Text(
                     text = "Resultado: ",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = Color(0xFF0F2B48)
                 )
 
                 Text(
                     text = "(${metrosPorEstaca.toString().removeSuffix(".0")} m/estaca)",
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 17.sp,
+                    fontSize = 14.sp,
                     color = Color(0xFF00875A)
                 )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Container verde menta com os botões e o número em destaque
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 color = Color(0xFFE8F5E9)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                        .padding(horizontal = 12.dp, vertical = paddingVerticalCorpo),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
                         onClick = onLimpar,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(38.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.DeleteOutline,
                             contentDescription = "Limpar campos",
                             tint = Color(0xFF0F2B48),
-                            modifier = Modifier.size(26.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
 
@@ -122,19 +124,20 @@ fun SecaoResultado(
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp,
+                        fontSize = tamanhoFonte,
+                        maxLines = 1,
                         color = Color(0xFF0B2545)
                     )
 
                     IconButton(
                         onClick = onCopiar,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(38.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.ContentCopy,
                             contentDescription = "Copiar resultado",
                             tint = Color(0xFF00875A),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
                 }
